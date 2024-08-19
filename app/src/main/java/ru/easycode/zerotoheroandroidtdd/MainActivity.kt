@@ -18,4 +18,14 @@ class MainActivity : AppCompatActivity() {
             binding.titleTextView.text = getString(R.string.text)
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("key", binding.titleTextView.text.toString())
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        binding.titleTextView.text = savedInstanceState.getString("key")
+    }
 }
