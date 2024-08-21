@@ -1,12 +1,18 @@
 package ru.easycode.zerotoheroandroidtdd
 
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import ru.easycode.zerotoheroandroidtdd.databinding.ActivityMainBinding
+import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private var state: State = State.Initial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -14,25 +20,45 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.removeButton.setOnClickListener {
-            binding.rootLayout.removeView(binding.titleTextView)
+            state = State.Removed
+            state.apply(binding.rootLayout, binding.titleTextView)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val removedTextView = binding.rootLayout.childCount == 1
-        outState.putBoolean(KEY, removedTextView)
+        outState.putSerializable(KEY, state)
     }
 
+    @Suppress("DEPRECATION")
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val removedTextView = savedInstanceState.getBoolean(KEY)
-        if (removedTextView)
-            binding.rootLayout.removeView(binding.titleTextView)
-
+        state = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            savedInstanceState.getSerializable(KEY, State::class.java) as State
+        } else {
+            savedInstanceState.getSerializable(KEY) as State
+        }
+        state.apply(binding.rootLayout, binding.titleTextView)
     }
 
     companion object {
         private const val KEY = "key"
+    }
+}
+
+interface State : Serializable {
+
+    fun apply(linearLayout: LinearLayout, textView: TextView)
+
+    object Initial : State {
+        private fun readResolve(): Any = Initial
+        override fun apply(linearLayout: LinearLayout, textView: TextView) = Unit
+    }
+
+    object Removed : State {
+        private fun readResolve(): Any = Removed
+        override fun apply(linearLayout: LinearLayout, textView: TextView) {
+            linearLayout.removeView(textView)
+        }
     }
 }
