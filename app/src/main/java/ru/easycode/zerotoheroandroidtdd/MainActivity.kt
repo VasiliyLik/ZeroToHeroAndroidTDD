@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.actionButton.setOnClickListener {
             val text = binding.inputEditText.text.toString()
-//            myItemsAdapter.add(text)
             viewModel.add(text)
             binding.inputEditText.text?.clear()
         }
