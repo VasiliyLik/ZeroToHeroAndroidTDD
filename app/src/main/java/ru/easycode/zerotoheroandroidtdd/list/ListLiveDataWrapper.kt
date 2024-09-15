@@ -1,0 +1,37 @@
+package ru.easycode.zerotoheroandroidtdd.list
+
+import ru.easycode.zerotoheroandroidtdd.core.LiveDataWrapper
+
+interface ListLiveDataWrapper {
+
+    interface Read : LiveDataWrapper.Read<List<CharSequence>>
+
+    interface UpDate : LiveDataWrapper.UpDate<List<CharSequence>>
+
+    interface Mutable : Read, UpDate {
+
+        fun save(bundleWrapper: BundleWrapper.Save)
+    }
+
+    interface Add {
+        fun add(source: CharSequence)
+    }
+
+    interface All : Mutable, Add
+
+    class Base : LiveDataWrapper.Abstract<List<CharSequence>>(), All {
+
+        override fun save(bundleWrapper: BundleWrapper.Save) {
+            liveData.value?.let {
+                bundleWrapper.save(ArrayList(it))
+            }
+        }
+
+        override fun add(source: CharSequence) {
+            val currentList = liveData.value ?: ArrayList()
+            val newList = ArrayList<CharSequence>(currentList)
+            newList.add(source)
+            update(newList)
+        }
+    }
+}
