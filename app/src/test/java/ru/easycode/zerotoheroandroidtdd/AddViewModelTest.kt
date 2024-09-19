@@ -79,9 +79,9 @@ private interface FakeClearViewModel : ClearViewModel {
             assertEquals(expected, actual)
         }
 
-        override fun clearViewModel(clasz: Class<out ViewModel>) {
+        override fun clearViewModel(clazz: Class<out ViewModel>) {
             order.add(CLEAR)
-            actual = clasz
+            actual = clazz
         }
     }
 }
