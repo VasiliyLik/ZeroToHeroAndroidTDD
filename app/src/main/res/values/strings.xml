@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ZeroToHeroAndroidTDD</string>
+    <string name="add_button">add</string>
+    <string name="save_button">save</string>
+    <string name="textview_are_you_sure_want_to_delete">Are you sure you want to delete item?</string>
+    <string name="delete_button">delete</string>
 </resources>
