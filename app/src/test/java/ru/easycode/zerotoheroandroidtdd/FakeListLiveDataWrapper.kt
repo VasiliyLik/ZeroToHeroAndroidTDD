@@ -27,9 +27,9 @@ interface FakeListLiveDataWrapper : ListLiveDataWrapper.All {
             }
         }
 
-        override fun update(list: List<ItemUi>) {
+        override fun update(value: List<ItemUi>) {
             actual.clear()
-            actual.addAll(list)
+            actual.addAll(value)
         }
 
         override fun liveData(): LiveData<List<ItemUi>> {
